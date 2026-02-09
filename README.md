@@ -59,6 +59,10 @@ leemeng0x61@gmail.com
 
 ## Changelog
 
+### v1.2.1 (2026-02-06)
+
+- ✅ **Stock Detail Popup**: Click on any stock to view detailed information.
+
 ### v1.2.0 (2026-02-01)
 
 - ✅ **Trend Charts**: Added sparklines to visualize price history in the list view.

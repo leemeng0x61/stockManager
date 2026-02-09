@@ -85,7 +85,7 @@ Item {
 
         var url = "";
         if (intradayProvider === "sina") {
-            url = `https://quotes.sina.cn/cn/api/jsonp.php/var_${code}=/CN_MarketDataService.getKLineData?symbol=${code}&scale=5&ma=no&datalen=48`;
+            url = `https://quotes.sina.cn/cn/api/jsonp.php/var_${code}=/CN_MarketDataService.getKLineData?symbol=${code}&scale=5&ma=no&datalen=80`;
         }
 
         var cmd = `curl -s --max-time 5 "${url}"`;
@@ -137,7 +137,16 @@ Item {
                         // Filter to keep only items from the same day
                         var todaysData = json.filter(item => item.day.startsWith(lastDate));
                         
-                        return todaysData.map(item => parseFloat(item.close));
+                        return todaysData.map(function(item) {
+                            var timeStr = item.day.split(' ')[1]; // "13:05:00"
+                            if (timeStr && timeStr.length >= 5) {
+                                timeStr = timeStr.substring(0, 5); // "13:05"
+                            }
+                            return {
+                                time: timeStr,
+                                price: parseFloat(item.close)
+                            };
+                        });
                     }
                 }
             } catch (e) {

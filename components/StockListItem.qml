@@ -30,6 +30,8 @@ Item {
     }
     property var onSwipeClose: function () {
     }
+    // Signal for showing details with geometry
+    signal showDetail(var stock, real x, real y, real w, real h)
 
     // Internal state
     property bool isOpen: false
@@ -271,10 +273,25 @@ Item {
                 }
 
                 StockSparkline {
+                    id: sparkline
                     anchors.verticalCenter: parent.verticalCenter
                     visible: root.showSparklines
                     history: root.stockData ? root.stockData.history : []
                     lineColor: root.stockData ? StockService.getChangeColor(root.stockData.changeAmount) : Theme.primary
+                    
+                    MouseArea {
+                        anchors.fill: parent
+                        // Make sure we have a decent hit target
+                        anchors.margins: -4
+                        cursorShape: Qt.PointingHandCursor
+                        onClicked: {
+                            if (root.stockData) {
+                                // Map coordinates to the ListView (common ancestor available via attached property)
+                                var p = sparkline.mapToItem(root.ListView.view, 0, 0);
+                                root.showDetail(root.stockData, p.x, p.y, sparkline.width, sparkline.height);
+                            }
+                        }
+                    }
                 }
             }
 

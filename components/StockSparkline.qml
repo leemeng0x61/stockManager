@@ -81,8 +81,14 @@ Item {
         }
 
         var points = [];
-        var min = Math.min.apply(null, data);
-        var max = Math.max.apply(null, data);
+        
+        // Handle both objects {time, price} and raw numbers
+        var prices = data.map(function(d) {
+            return (d && typeof d === 'object') ? d.price : d;
+        });
+
+        var min = Math.min.apply(null, prices);
+        var max = Math.max.apply(null, prices);
         var range = max - min;
         if (range === 0) range = 1;
 
@@ -94,7 +100,8 @@ Item {
         var stepX = data.length > 1 ? maxX / (data.length - 1) : root.width;
         for (var i = 0; i < data.length; i++) {
             var x = i * stepX;
-            var y = root.height - ((data[i] - min) / range * root.height);
+            var val = prices[i];
+            var y = root.height - ((val - min) / range * root.height);
             points.push(Qt.point(x, y));
         }
         return points;

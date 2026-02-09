@@ -17,8 +17,8 @@ Singleton
     property var pinnedCodes: []
     property string displayMode: "percent"
     property string nameDisplayMode: "none"
-    property string upColor: "#ff4d4f"
-    property string downColor: "#52c41a"
+    property color upColor: "#ff4d4f"
+    property color downColor: "#52c41a"
     property int refreshInterval: 30000
     property int statusBarMaxCount: 3
     property bool statusBarScrollable: false
@@ -102,10 +102,10 @@ Singleton
         if (val) statusBarMaxCount = val;
 
         val = PluginService.loadPluginData(pluginId, "statusBarScrollable");
-        if (val !== null) statusBarScrollable = val;
+        if (val !== undefined && val !== null) statusBarScrollable = val;
 
         val = PluginService.loadPluginData(pluginId, "showSparklines");
-        if (val !== null) showSparklines = val;
+        if (val !== undefined && val !== null) showSparklines = val;
     }
 
     function loadStockData() {

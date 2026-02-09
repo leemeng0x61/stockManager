@@ -31,6 +31,7 @@ PluginComponent {
     property bool popoutVisible: false
     property bool isEditMode: false
     property string lastKey: "" // For sequence keys like 'gg'
+    property var selectedStock: null
 
     function t(key) {
         let val = Utils.t(key);
@@ -315,6 +316,11 @@ PluginComponent {
                                     list.currentIndex = idx;
                                 }
                                 onSwipeClose: () => ListView.view.currentOpenIndex = -1
+                                onShowDetail: (stock, x, y, w, h) => {
+                                    // Map coordinates from ListView to PopoutComponent
+                                    var pos = stockList.mapToItem(popoutComp, x, y);
+                                    detailPopup.open(pos.x, pos.y, w, h, stock);
+                                }
                             }
                         }
                     }
@@ -350,6 +356,12 @@ PluginComponent {
                         popoutComp.forceActiveFocus();
                     }
                     onCancel: popoutComp.forceActiveFocus()
+                }
+
+                StockDetailPopup {
+                    id: detailPopup
+                    // visible and stock are handled by open()
+                    onClose: pluginRoot.selectedStock = null
                 }
             }
         }
