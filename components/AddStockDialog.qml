@@ -11,7 +11,7 @@ Rectangle {
     id: root
 
     // Signals
-    signal confirm(string code, string name)
+    signal confirm(string code, string name, bool alertEnabled, real alertThreshold)
 
     signal cancel()
 
@@ -203,6 +203,117 @@ Rectangle {
                     }
                 }
             }
+
+            // Alert Settings
+            Column {
+                id: alertSettings
+                width: parent.width
+                spacing: 8
+                visible: root.searchResults.length === 0
+
+                Rectangle {
+                    width: parent.width
+                    height: 1
+                    color: Theme.surfaceVariant
+                    opacity: 0.5
+                }
+
+                Row {
+                    width: parent.width
+                    spacing: 8
+
+                    DankIcon {
+                        name: alertSwitch.checked ? "notifications_active" : "notifications_off"
+                        size: 18
+                        color: alertSwitch.checked ? Theme.primary : Theme.surfaceVariantText
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Column {
+                        width: parent.width - 80
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        StyledText {
+                            width: parent.width
+                            text: root.translationFunc("Enable Alert")
+                            font.pixelSize: Theme.fontSizeSmall
+                            color: Theme.primary
+                        }
+                    }
+
+                    Item {
+                        width: 52
+                        height: parent.height
+
+                        Switch {
+                            id: alertSwitch
+                            checked: false
+                            anchors.right: parent.right
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                    }
+                }
+
+                Row {
+                    width: parent.width
+                    spacing: 8
+                    opacity: alertSwitch.checked ? 1.0 : 0.4
+                    enabled: alertSwitch.checked
+
+                    DankIcon {
+                        name: "trending_up"
+                        size: 18
+                        color: Theme.primary
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    StyledText {
+                        text: root.translationFunc("Alert Threshold (%)")
+                        font.pixelSize: Theme.fontSizeSmall
+                        color: Theme.secondary
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Rectangle {
+                        width: 80
+                        height: 32
+                        radius: 8
+                        color: Theme.surfaceVariant
+                        border.color: thresholdInput.activeFocus ? Theme.primary : "transparent"
+                        border.width: 1
+
+                        Row {
+                            anchors.centerIn: parent
+                            spacing: 4
+
+                            TextInput {
+                                id: thresholdInput
+                                width: 50
+                                height: 32
+                                verticalAlignment: Text.AlignVCenter
+                                horizontalAlignment: Text.AlignRight
+                                font.pixelSize: Theme.fontSizeMedium
+                                font.family: "monospace"
+                                color: Theme.primary
+                                selectByMouse: true
+                                text: "3.0"
+                                validator: DoubleValidator {
+                                    bottom: 0.1
+                                    top: 100.0
+                                    decimals: 1
+                                }
+                            }
+
+                            StyledText {
+                                text: "%"
+                                font.pixelSize: Theme.fontSizeMedium
+                                color: Theme.secondary
+                                anchors.verticalCenter: parent.verticalCenter
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -217,7 +328,7 @@ Rectangle {
                 target: dimBackground; opacity: 0.4
             }
             PropertyChanges {
-                target: dialogWindow; x: (root.width - 340) / 2; y: root.height - dialogWindow.height - 12; width: 340; height: resultsContainer.visible ? Math.min(root.height - 40, resultsContainer.height + 44 + 32 + 12) : 44 + 32
+                target: dialogWindow; x: (root.width - 340) / 2; y: root.height - dialogWindow.height - 12; width: 340; height: resultsContainer.visible ? Math.min(root.height - 40, resultsContainer.height + 44 + 32 + 12) : (alertSettings.visible ? 44 + 32 + 12 + alertSettings.height : 44 + 32)
             }
             PropertyChanges {
                 target: contentArea; opacity: 1
@@ -283,13 +394,17 @@ Rectangle {
                     StockService.previewStock(stock.code, verified => {
                         root.isVerifying = false;
                         if (verified && verified.name) {
-                            root.confirm(verified.code, verified.name);
+                            var alertEnabled = alertSwitch.checked;
+                            var threshold = parseFloat(thresholdInput.text) || 3.0;
+                            root.confirm(verified.code, verified.name, alertEnabled, threshold);
                             close();
                         } else ToastService.showError(root.translationFunc("Stock not found: ") + stock.code);
                     });
                 }
             } else {
-                root.confirm(stock.code, stock.name);
+                var alertEnabled = alertSwitch.checked;
+                var threshold = parseFloat(thresholdInput.text) || 3.0;
+                root.confirm(stock.code, stock.name, alertEnabled, threshold);
                 close();
             }
         }
@@ -304,6 +419,8 @@ Rectangle {
         searchResults = [];
         selectedIndex = -1;
         isVerifying = false;
+        alertSwitch.checked = false;
+        thresholdInput.text = "3.0";
         root.state = "expanded";
         Qt.callLater(() => searchInput.forceActiveFocus());
     }

@@ -53,36 +53,53 @@ Rectangle {
             }
         }
 
-        // Center: Last Update Time & Market Status
-        Row {
+        // Center: Last Update Time & Market Status (Clickable)
+        Rectangle {
             anchors.centerIn: parent
-            spacing: 6
-            opacity: 0.8
+            width: updateRow.width + 16
+            height: 28
+            radius: 6
+            color: updateMouseArea.containsMouse ? Theme.surfaceVariant : "transparent"
 
-            Rectangle {
-                width: 8; height: 8; radius: 4
-                anchors.verticalCenter: parent.verticalCenter
-                color: Utils.isTradingTime() ? "#52c41a" : Theme.surfaceVariantText
+            Row {
+                id: updateRow
+                anchors.centerIn: parent
+                spacing: 6
+                opacity: 0.8
 
-                SequentialAnimation on opacity {
-                    running: Utils.isTradingTime()
-                    loops: Animation.Infinite
-                    NumberAnimation {
-                        from: 1.0;
-                        to: 0.3; duration: 1500; easing.type: Easing.InOutQuad
+                Rectangle {
+                    width: 8; height: 8; radius: 4
+                    anchors.verticalCenter: parent.verticalCenter
+                    color: Utils.isTradingTime() ? "#52c41a" : Theme.surfaceVariantText
+
+                    SequentialAnimation on opacity {
+                        running: Utils.isTradingTime()
+                        loops: Animation.Infinite
+                        NumberAnimation {
+                            from: 1.0;
+                            to: 0.3; duration: 1500; easing.type: Easing.InOutQuad
+                        }
+                        NumberAnimation {
+                            from: 0.3;
+                            to: 1.0; duration: 1500; easing.type: Easing.InOutQuad
+                        }
                     }
-                    NumberAnimation {
-                        from: 0.3;
-                        to: 1.0; duration: 1500; easing.type: Easing.InOutQuad
-                    }
+                }
+
+                StyledText {
+                    text: root.t("Updated: ") + (root.lastUpdateDate ? Utils.formatSmartTime(new Date(root.lastUpdateDate)) : root.t("Never"))
+                    font.pixelSize: Theme.fontSizeSmall
+                    color: Theme.secondary
+                    anchors.verticalCenter: parent.verticalCenter
                 }
             }
 
-            StyledText {
-                text: root.t("Updated: ") + (root.lastUpdateDate ? Utils.formatSmartTime(new Date(root.lastUpdateDate)) : root.t("Never"))
-                font.pixelSize: Theme.fontSizeSmall
-                color: Theme.secondary
-                anchors.verticalCenter: parent.verticalCenter
+            MouseArea {
+                id: updateMouseArea
+                anchors.fill: parent
+                hoverEnabled: true
+                cursorShape: Qt.PointingHandCursor
+                onClicked: root.refreshClicked()
             }
         }
 
@@ -100,21 +117,6 @@ Rectangle {
                     var pos = addBtn.mapToItem(null, 0, 0);
                     root.addClicked(pos.x, pos.y, addBtn.width, addBtn.height);
                 }
-            }
-
-            // Edit Mode Button
-            IconButton {
-                iconName: root.isEditMode ? "check" : "edit"
-                iconColor: root.isEditMode ? Theme.primary : Theme.surfaceVariantText
-                onClicked: root.settingsClicked()
-            }
-
-            // Refresh Button
-            IconButton {
-                iconName: "refresh"
-                iconColor: root.isLoading ? Theme.primary : Theme.surfaceVariantText
-                onClicked: root.refreshClicked()
-                isRotating: root.isLoading
             }
         }
     }

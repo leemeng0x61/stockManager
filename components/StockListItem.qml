@@ -32,6 +32,7 @@ Item {
     }
     // Signal for showing details with geometry
     signal showDetail(var stock, real x, real y, real w, real h)
+    signal showAlertSettings(var stock)
 
     // Internal state
     property bool isOpen: false
@@ -106,12 +107,6 @@ Item {
             }
         }
 
-        // Selection MouseArea
-        MouseArea {
-            anchors.fill: parent
-            onClicked: root.ListView.view.currentIndex = root.itemIndex
-        }
-
         // Swipe gesture handler (Background Layer)
         MouseArea {
             id: swipeArea
@@ -120,6 +115,14 @@ Item {
             visible: !root.isEditMode
             property real startX: 0
             property bool isDragging: false
+
+            onClicked: root.ListView.view.currentIndex = root.itemIndex
+            
+            onDoubleClicked: {
+                if (root.stockData) {
+                    root.showAlertSettings(root.stockData)
+                }
+            }
 
             onPressed: function (mouse) {
                 startX = mouse.x;

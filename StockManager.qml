@@ -321,6 +321,10 @@ PluginComponent {
                                     var pos = stockList.mapToItem(popoutComp, x, y);
                                     detailPopup.open(pos.x, pos.y, w, h, stock);
                                 }
+                                onShowAlertSettings: (stock) => {
+                                    var pos = bottomBar.mapToItem(popoutComp, 0, 0);
+                                    alertDialog.open(stock, pos.x + bottomBar.width / 2, pos.y, 32, 32);
+                                }
                             }
                         }
                     }
@@ -351,8 +355,8 @@ PluginComponent {
                 AddStockDialog {
                     id: addDialog
                     translationFunc: pluginRoot.t
-                    onConfirm: (code, name) => {
-                        StockService.addStock(code, name);
+                    onConfirm: (code, name, alertEnabled, alertThreshold) => {
+                        StockService.addStock(code, name, alertEnabled, alertThreshold);
                         popoutComp.forceActiveFocus();
                     }
                     onCancel: popoutComp.forceActiveFocus()
@@ -362,6 +366,16 @@ PluginComponent {
                     id: detailPopup
                     // visible and stock are handled by open()
                     onClose: pluginRoot.selectedStock = null
+                }
+
+                StockAlertDialog {
+                    id: alertDialog
+                    translationFunc: pluginRoot.t
+                    onConfirm: (enabled, threshold) => {
+                        StockService.updateStockAlert(alertDialog.stockData.code, enabled, threshold);
+                        popoutComp.forceActiveFocus();
+                    }
+                    onCancel: popoutComp.forceActiveFocus()
                 }
             }
         }

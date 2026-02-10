@@ -12,6 +12,7 @@ A real-time A-share stock quote monitoring plugin for DankMaterialShell.
 - 📈 **Gain/Loss Display** – Red for gain, green for loss, clear at a glance
 - 🔍 **Multi-Stock Monitoring** – Monitor multiple stocks simultaneously
 - 📱 **DankBar Integration** – Shows Shanghai Composite Index change in the status bar
+- 🔔 **Price Alert** – Set custom threshold for each stock, get notified when triggered
 
 ## Screenshot
 
@@ -58,6 +59,15 @@ Tencent stock API response data mapping:
 leemeng0x61@gmail.com
 
 ## Changelog
+
+### v1.2.2 (2026-02-10)
+
+- ✅ **Price Alert Threshold**: Set custom alert threshold for each stock to receive system notifications.
+- ✅ **Alert Settings**: Double-click stock item to open alert settings dialog (enable switch + threshold).
+- ✅ **Configure on Add**: Set alert settings when adding new stocks.
+- ✅ **System Notifications**: Using notify-send with custom icon support.
+- ✅ **Multi-language Notifications**: Notification content supports English/Chinese.
+- ✅ **Smart Notifications**: Each stock triggers notification only once per day to avoid spam.
 
 ### v1.2.1 (2026-02-06)
 

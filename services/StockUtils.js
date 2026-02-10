@@ -48,23 +48,42 @@ var i18n = {
         "None": "无",
         "Pinyin (P)": "拼音首字母 (P)",
         "Hanzi (汉)": "汉字首字 (汉)",
+        "Alert Settings": "涨跌提醒设置",
+        "Enable Alert": "启用提醒",
+        "Alert Threshold (%)": "涨跌阈值 (%)",
+        "Alert when change exceeds": "当涨跌幅超过此值时提醒",
+        "Save": "保存",
+        "Stock Alert Settings": "股票提醒设置",
         "Full Name": "完整名称",
         "Refresh Interval": "后台刷新间隔",
         "Choose background update frequency.": "选择后台数据更新频率",
         "About": "关于",
-        "To pin stocks, click 'Edit' in the main panel and toggle the pin icon. Font size can be adjusted in system settings.": "如需固定股票到状态栏，请在主面板点击“编辑”按钮进入模式，点击置顶图标。状态栏字体大小可在系统状态栏设置中调整。"
+        "To pin stocks, click 'Edit' in the main panel and toggle the pin icon. Font size can be adjusted in system settings.": "如需固定股票到状态栏，请在主面板点击\"编辑\"按钮进入模式，点击置顶图标。状态栏字体大小可在系统状态栏设置中调整。",
+        "Stock Alert": "股票提醒",
+        "up": "上涨",
+        "down": "下跌",
+        "changed": "涨跌幅达到"
+    },
+    "en_US": {
+        "Name": "Name",
+        "Code": "Code",
+        "Price": "Price",
+        "Change": "Change",
+        "Percent": "Percent",
+        "Stock Alert": "Stock Alert",
+        "up": "up",
+        "down": "down",
+        "changed": "changed"
     }
 };
 
 /**
  * Global translate function
- * Returns null if key not found or if not in Chinese locale to allow QML fallback to I18n.tr
+ * Returns translated text based on current locale
  */
 function t(key) {
-    if (Qt.locale().name.startsWith("zh")) {
-        return (i18n["zh_CN"] && i18n["zh_CN"][key]) ? i18n["zh_CN"][key] : null;
-    }
-    return null;
+    var locale = Qt.locale().name.startsWith("zh") ? "zh_CN" : "en_US";
+    return (i18n[locale] && i18n[locale][key]) ? i18n[locale][key] : key;
 }
 
 // Market type prefixes
@@ -271,14 +290,16 @@ function padZero(num) {
  * @param {number} costPrice - Cost price (optional)
  * @returns {object} Stock object
  */
-function createStock(code, name) {
+function createStock(code, name, alertEnabled, alertThreshold) {
     return {
         code: code || "",
         name: name || "",
         currentPrice: 0,
         prevClose: 0,
         changeAmount: 0,
-        changePercent: 0
+        changePercent: 0,
+        alertEnabled: alertEnabled !== undefined ? alertEnabled : false,
+        alertThreshold: alertThreshold !== undefined ? alertThreshold : 3.0
     };
 }
 
@@ -392,7 +413,18 @@ function parseSuggestions(data) {
  */
 function cloneStocks(stocks) {
     if (!stocks || !Array.isArray(stocks)) return [];
-    return stocks.slice();
+    return stocks.map(s => ({
+        code: s.code,
+        name: s.name,
+        currentPrice: s.currentPrice,
+        prevClose: s.prevClose,
+        changeAmount: s.changeAmount,
+        changePercent: s.changePercent,
+        history: s.history,
+        _uiIndex: s._uiIndex,
+        alertEnabled: s.alertEnabled,
+        alertThreshold: s.alertThreshold
+    }));
 }
 
 // Pinyin reference characters (approximate boundaries)

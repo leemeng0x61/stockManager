@@ -1,9 +1,11 @@
 singleton StockService 1.0 services/StockService.qml
 StockApiService 1.0 services/StockApiService.qml
 AddStockDialog 1.0 components/AddStockDialog.qml
+StockAlertDialog 1.0 components/StockAlertDialog.qml
 StockBottomBar 1.0 components/StockBottomBar.qml
 StockListItem 1.0 components/StockListItem.qml
 StockStatusBar 1.0 components/StockStatusBar.qml
 StockTableHeader 1.0 components/StockTableHeader.qml
 StockSparkline 1.0 components/StockSparkline.qml
 StockEmptyState 1.0 components/StockEmptyState.qml
+StockDetailPopup 1.0 components/StockDetailPopup.qml

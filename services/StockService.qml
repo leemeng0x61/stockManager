@@ -36,6 +36,9 @@ Singleton
     property bool sortAscending: true
     property string filterText: ""
     property bool globalShowSparklines: true // Kept for compatibility if needed, but showSparklines should be used
+    
+    // Alert notification tracking
+    property var alertNotifiedStocks: ({}) // Track stocks that have been notified today
 
     // --- Dependencies ---
     StockApiService {
@@ -115,7 +118,13 @@ Singleton
         if (savedStocks && Array.isArray(savedStocks) && savedStocks.length > 0) {
             var loaded = [];
             for (var i = 0; i < savedStocks.length; i++) {
-                var s = Utils.createStock(savedStocks[i].code, savedStocks[i].name);
+                var saved = savedStocks[i];
+                var s = Utils.createStock(
+                    saved.code, 
+                    saved.name, 
+                    saved.alertEnabled, 
+                    saved.alertThreshold
+                );
                 s._uiIndex = i;
                 loaded.push(s);
             }
@@ -150,7 +159,12 @@ Singleton
         toSave.sort(function (a, b) {
             return (a._uiIndex || 0) - (b._uiIndex || 0);
         });
-        var data = toSave.map(s => ({code: s.code, name: s.name}));
+        var data = toSave.map(s => ({
+            code: s.code, 
+            name: s.name,
+            alertEnabled: s.alertEnabled || false,
+            alertThreshold: s.alertThreshold || 3.0
+        }));
         PluginService.savePluginData(pluginId, "stocks", data);
     }
 
@@ -277,8 +291,18 @@ Singleton
                 changeAmount: parsed.currentPrice > 0 ? parsed.changeAmount : oldStock.changeAmount,
                 changePercent: parsed.currentPrice > 0 ? parsed.changePercent : oldStock.changePercent,
                 history: oldStock.history,
-                _uiIndex: oldStock._uiIndex
+                _uiIndex: oldStock._uiIndex,
+                alertEnabled: oldStock.alertEnabled,
+                alertThreshold: oldStock.alertThreshold
             };
+
+            // Check alert threshold
+            if (newStock.alertEnabled && parsed.currentPrice > 0) {
+                var absPercent = Math.abs(newStock.changePercent);
+                if (absPercent >= newStock.alertThreshold) {
+                    checkAndNotifyAlert(oldStock, newStock);
+                }
+            }
 
             if (parsed.currentPrice > 0 && Utils.isMarketIndex(newStock.code)) {
                 shIndex = newStock;
@@ -314,10 +338,10 @@ Singleton
         forceUpdateLists();
     }
 
-    function addStock(code, name) {
+    function addStock(code, name, alertEnabled, alertThreshold) {
         if (stocks.some(s => s.code === code)) return;
 
-        var newStock = Utils.createStock(code, name);
+        var newStock = Utils.createStock(code, name, alertEnabled, alertThreshold);
         var maxIndex = -1;
         for (var i = 0; i < stocks.length; i++) {
             if ((stocks[i]._uiIndex || 0) > maxIndex) maxIndex = stocks[i]._uiIndex || 0;
@@ -474,5 +498,63 @@ Singleton
 
     function searchStocks(keyword, callback) {
         stockApi.searchStocks(keyword, callback);
+    }
+
+    function updateStockAlert(code, enabled, threshold) {
+        if (!code) return;
+        
+        var updated = false;
+        var newStocks = Utils.cloneStocks(stocks);
+        
+        for (var i = 0; i < newStocks.length; i++) {
+            if (newStocks[i].code === code) {
+                newStocks[i].alertEnabled = enabled;
+                newStocks[i].alertThreshold = threshold;
+                updated = true;
+                break;
+            }
+        }
+        
+        if (updated) {
+            stocks = newStocks;
+            saveStockData();
+            forceUpdateLists();
+        }
+    }
+
+    function checkAndNotifyAlert(oldStock, newStock) {
+        var today = new Date().toDateString();
+        var notifyKey = newStock.code + "_" + today;
+        
+        // Check if already notified today
+        if (alertNotifiedStocks[notifyKey]) {
+            return;
+        }
+        
+        // Mark as notified
+        var newNotified = Object.assign({}, alertNotifiedStocks);
+        newNotified[notifyKey] = true;
+        alertNotifiedStocks = newNotified;
+        
+        // Build notification message
+        var percentStr = Math.abs(newStock.changePercent).toFixed(2) + "%";
+        var priceStr = newStock.currentPrice.toFixed(2);
+        var changeStr = (newStock.changePercent > 0 ? "+" : "") + newStock.changeAmount.toFixed(2);
+        var percentFullStr = (newStock.changePercent > 0 ? "+" : "") + percentStr;
+        
+        var title = newStock.name + " (" + Utils.getPureCode(newStock.code) + ")";
+        var message = Utils.t("Percent") + ": " + percentFullStr + "\n" +
+                      Utils.t("Change") + ": " + changeStr + "\n" +
+                      Utils.t("Price") + ": " + priceStr;
+        
+        // Show system notification with custom icon
+        var notifyCmd = "notify-send \"" + title + "\" \"" + message + "\" -i \"$HOME/.config/DankMaterialShell/plugins/stockManager/notifycation.png\" -u normal";
+        Proc.runCommand("stockManager:notify", ["sh", "-c", notifyCmd], function(output, exitCode) {
+            // Notification sent
+        });
+    }
+
+    function resetDailyAlertTracking() {
+        alertNotifiedStocks = {};
     }
 }
