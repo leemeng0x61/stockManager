@@ -420,7 +420,44 @@ PluginSettings {
         width: parent.width
         spacing: Theme.spacingM
 
-        // Max Count Input
+        // Font Scale Input
+        Row {
+            spacing: Theme.spacingM
+            height: 32
+
+            StyledText {
+                text: root.t("Font Scale:")
+                font.pixelSize: Theme.fontSizeMedium
+                color: Theme.surfaceText
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
+            Rectangle {
+                width: 60; height: 32
+                color: Theme.surfaceContainer
+                radius: 4
+                border.color: Theme.surfaceVariant; border.width: 1
+
+                TextInput {
+                    anchors.fill: parent; anchors.margins: 4
+                    text: StockService.statusBarFontScale.toFixed(1)
+                    color: Theme.surfaceText
+                    font.pixelSize: Theme.fontSizeMedium
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    validator: DoubleValidator {
+                        bottom: 0.5; top: 3.0; decimals: 1
+                    }
+                    onEditingFinished: {
+                        var val = parseFloat(text);
+                        if (!isNaN(val) && val >= 0.5 && val <= 3.0) StockService.statusBarFontScale = val;
+                        else text = StockService.statusBarFontScale.toFixed(1);
+                    }
+                }
+            }
+        }
+
+        // Max Stocks Input
         Row {
             spacing: Theme.spacingM
             height: 32

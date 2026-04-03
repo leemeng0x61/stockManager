@@ -60,6 +60,10 @@ leemeng0x61@gmail.com
 
 ## Changelog
 
+### v1.2.3 (2026-04-03)
+
+- ✅ **Bar Configuration Simplification**: Removed explicit barThickness and config bindings, using default Quickshell behavior for cleaner code.
+
 ### v1.2.2 (2026-02-10)
 
 - ✅ **Price Alert Threshold**: Set custom alert threshold for each stock to receive system notifications.

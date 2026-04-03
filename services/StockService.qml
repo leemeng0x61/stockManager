@@ -18,11 +18,12 @@ Singleton
     property string displayMode: "percent"
     property string nameDisplayMode: "none"
     property color upColor: "#ff4d4f"
-    property color downColor: "#52c41a"
+    property color downColor: "#237804"
     property int refreshInterval: 30000
     property int statusBarMaxCount: 3
     property bool statusBarScrollable: false
     property bool showSparklines: true
+    property real statusBarFontScale: 1.5
 
     // --- State Properties (Source of Truth) ---
     property var stocks: []
@@ -65,6 +66,7 @@ Singleton
         globalShowSparklines = showSparklines; // Sync internal var
         saveSetting("showSparklines", showSparklines);
     }
+    onStatusBarFontScaleChanged: saveSetting("statusBarFontScale", statusBarFontScale)
 
     // --- Initialization ---
     Component.onCompleted: {
@@ -109,6 +111,9 @@ Singleton
 
         val = PluginService.loadPluginData(pluginId, "showSparklines");
         if (val !== undefined && val !== null) showSparklines = val;
+        
+        val = PluginService.loadPluginData(pluginId, "statusBarFontScale");
+        if (val !== undefined && val !== null) statusBarFontScale = val;
     }
 
     function loadStockData() {
