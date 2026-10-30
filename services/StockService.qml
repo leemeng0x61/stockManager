@@ -23,7 +23,6 @@ Singleton
     property int statusBarMaxCount: 3
     property bool statusBarScrollable: false
     property bool showSparklines: true
-    property real statusBarFontScale: 1.5
 
     // --- State Properties (Source of Truth) ---
     property var stocks: []
@@ -66,7 +65,6 @@ Singleton
         globalShowSparklines = showSparklines; // Sync internal var
         saveSetting("showSparklines", showSparklines);
     }
-    onStatusBarFontScaleChanged: saveSetting("statusBarFontScale", statusBarFontScale)
 
     // --- Initialization ---
     Component.onCompleted: {
@@ -112,8 +110,6 @@ Singleton
         val = PluginService.loadPluginData(pluginId, "showSparklines");
         if (val !== undefined && val !== null) showSparklines = val;
         
-        val = PluginService.loadPluginData(pluginId, "statusBarFontScale");
-        if (val !== undefined && val !== null) statusBarFontScale = val;
     }
 
     function loadStockData() {

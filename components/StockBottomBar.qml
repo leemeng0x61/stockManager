@@ -1,3 +1,4 @@
+import qs.DCommon.Widgets as DmsCommon
 import QtQuick
 import qs.Common
 import qs.Widgets
@@ -37,7 +38,7 @@ Rectangle {
             anchors.verticalCenter: parent.verticalCenter
             spacing: 8
 
-            DankIcon {
+            DmsCommon.DIcon {
                 visible: root.hasError
                 name: "error"
                 size: 16
@@ -132,7 +133,7 @@ Rectangle {
         width: 32; height: 32; radius: 6
         color: mouseArea.containsMouse ? Theme.surfaceVariant : "transparent"
 
-        DankIcon {
+        DmsCommon.DIcon {
             anchors.centerIn: parent
             name: iconName
             size: 18

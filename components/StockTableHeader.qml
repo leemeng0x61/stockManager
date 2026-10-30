@@ -1,3 +1,4 @@
+import qs.DCommon.Widgets as DmsCommon
 import QtQuick
 import qs.Widgets
 import qs.Common
@@ -144,7 +145,7 @@ Rectangle {
                 wrapMode: Text.NoWrap
             }
 
-            DankIcon {
+            DmsCommon.DIcon {
                 visible: headerCell.active
                 name: headerCell.isAscending ? "keyboard_arrow_up" : "keyboard_arrow_down"
                 size: 16

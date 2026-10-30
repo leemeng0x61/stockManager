@@ -1,3 +1,4 @@
+import qs.DCommon.Widgets as DmsCommon
 import QtQuick
 import qs.Widgets
 import qs.Common
@@ -56,7 +57,7 @@ Item {
         visible: itemContent.x < -5 && !isEditMode
         opacity: Math.min(1.0, Math.abs(itemContent.x) / 70)
 
-        DankIcon {
+        DmsCommon.DIcon {
             name: "delete"
             size: 20
             color: "white"
@@ -79,7 +80,7 @@ Item {
         visible: itemContent.x > 5 && !isEditMode
         opacity: Math.min(1.0, Math.abs(itemContent.x) / 70)
 
-        DankIcon {
+        DmsCommon.DIcon {
             name: "push_pin"
             size: 20
             color: "white"
@@ -212,7 +213,7 @@ Item {
                     }
                 }
 
-                DankIcon {
+                DmsCommon.DIcon {
                     name: "push_pin"
                     filled: root.isPinned
                     size: 16
@@ -356,7 +357,7 @@ Item {
                     }
                 }
 
-                DankIcon {
+                DmsCommon.DIcon {
                     name: "delete"
                     size: 16
                     color: Utils.COLORS.DELETE

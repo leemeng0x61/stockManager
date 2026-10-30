@@ -1,3 +1,4 @@
+import qs.DCommon.Widgets as DmsCommon
 import QtQuick
 import QtQuick.Layouts
 import qs.Common
@@ -22,7 +23,7 @@ Item {
         spacing: Theme.spacingM
         width: Math.min(parent.width - 40, 300)
 
-        DankIcon {
+        DmsCommon.DIcon {
             name: "show_chart"
             size: 48
             color: Theme.surfaceVariantText
@@ -65,7 +66,7 @@ Item {
                 anchors.centerIn: parent
                 spacing: 8
 
-                DankIcon {
+                DmsCommon.DIcon {
                     name: "add"
                     size: 18
                     color: Theme.primary

@@ -12,8 +12,8 @@ Item {
     property int orientation: Qt.Horizontal
     property var pinnedStocks: []
     property var shIndex: ({})
-    property real barThickness: 24
-    property var config: null
+    property real barThickness: 48
+    property var barConfig: null
     property int maxCount: 3
     property bool scrollable: false
 
@@ -67,8 +67,8 @@ Item {
                     StyledText {
                         anchors.verticalCenter: parent.verticalCenter
                         text: Utils.formatBarText(modelData, StockService.displayMode, StockService.nameDisplayMode)
-                        font.pixelSize: Theme.barTextSize(root.barThickness, root.config && root.config.fontScale ? root.config.fontScale : 1.0)
-                        color: StockService.getChangeColor(modelData.changeAmount)
+                        font.pixelSize: Theme.barTextSize(root.barThickness, root.barConfig?.fontScale, root.barConfig?.maximizeWidgetText)
+                        color: Qt.tint(StockService.getChangeColor(modelData.changeAmount), Theme.withAlpha(Theme.barForeground, 0.48))
                     }
                     Rectangle {
                         visible: index < root.visiblePinnedStocks.length - 1 || (root.pinnedStocks.length === 0)
@@ -80,8 +80,8 @@ Item {
             StyledText {
                 visible: !root.pinnedStocks || root.pinnedStocks.length === 0
                 text: root.shIndex && root.shIndex.code ? Utils.formatBarText(root.shIndex, StockService.displayMode, StockService.nameDisplayMode) : "..."
-                font.pixelSize: Theme.barTextSize(root.barThickness, root.config && root.config.fontScale ? root.config.fontScale : 1.0)
-                color: root.shIndex ? StockService.getChangeColor(root.shIndex.changeAmount) : Utils.COLORS.NEUTRAL
+                font.pixelSize: Theme.barTextSize(root.barThickness, root.barConfig?.fontScale, root.barConfig?.maximizeWidgetText)
+                color: root.shIndex ? Qt.tint(StockService.getChangeColor(root.shIndex.changeAmount), Theme.withAlpha(Theme.barForeground, 0.48)) : Utils.COLORS.NEUTRAL
             }
         }
     }
@@ -95,8 +95,8 @@ Item {
                 delegate: StyledText {
                     anchors.horizontalCenter: parent.horizontalCenter
                     text: Utils.formatBarText(modelData, StockService.displayMode, StockService.nameDisplayMode)
-                    font.pixelSize: Theme.barTextSize(root.barThickness, root.config && root.config.fontScale ? root.config.fontScale : 1.0)
-                    color: StockService.getChangeColor(modelData.changeAmount)
+                    font.pixelSize: Theme.barTextSize(root.barThickness, root.barConfig?.fontScale, root.barConfig?.maximizeWidgetText)
+                    color: Qt.tint(StockService.getChangeColor(modelData.changeAmount), Theme.withAlpha(Theme.barForeground, 0.48))
                 }
             }
 
@@ -104,8 +104,8 @@ Item {
                 visible: !root.pinnedStocks || root.pinnedStocks.length === 0
                 anchors.horizontalCenter: parent.horizontalCenter
                 text: root.shIndex && root.shIndex.code ? Utils.formatBarText(root.shIndex, StockService.displayMode, StockService.nameDisplayMode) : "..."
-                font.pixelSize: Theme.barTextSize(root.barThickness, root.config && root.config.fontScale ? root.config.fontScale : 1.0)
-                color: root.shIndex ? StockService.getChangeColor(root.shIndex.changeAmount) : Utils.COLORS.NEUTRAL
+                font.pixelSize: Theme.barTextSize(root.barThickness, root.barConfig?.fontScale, root.barConfig?.maximizeWidgetText)
+                color: root.shIndex ? Qt.tint(StockService.getChangeColor(root.shIndex.changeAmount), Theme.withAlpha(Theme.barForeground, 0.48)) : Utils.COLORS.NEUTRAL
             }
         }
     }

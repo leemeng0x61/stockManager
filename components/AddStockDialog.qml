@@ -1,3 +1,4 @@
+import qs.DCommon.Widgets as DmsCommon
 import QtQuick
 import QtQuick.Controls 2.15
 import qs.Widgets
@@ -145,7 +146,7 @@ Rectangle {
                 border.color: searchInput.activeFocus ? Theme.primary : "transparent"; border.width: 2
                 Row {
                     anchors.fill: parent; anchors.leftMargin: 12; spacing: 8
-                    DankIcon {
+                    DmsCommon.DIcon {
                         name: root.isVerifying ? "sync" : "search"; size: 18; color: Theme.primary; anchors.verticalCenter: parent.verticalCenter
                         RotationAnimator on rotation {
                             running: root.isVerifying; from: 0;
@@ -222,7 +223,7 @@ Rectangle {
                     width: parent.width
                     spacing: 8
 
-                    DankIcon {
+                    DmsCommon.DIcon {
                         name: alertSwitch.checked ? "notifications_active" : "notifications_off"
                         size: 18
                         color: alertSwitch.checked ? Theme.primary : Theme.surfaceVariantText
@@ -260,7 +261,7 @@ Rectangle {
                     opacity: alertSwitch.checked ? 1.0 : 0.4
                     enabled: alertSwitch.checked
 
-                    DankIcon {
+                    DmsCommon.DIcon {
                         name: "trending_up"
                         size: 18
                         color: Theme.primary

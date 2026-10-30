@@ -1,3 +1,4 @@
+import qs.DCommon.Widgets as DmsCommon
 import QtQuick
 import qs.Common
 import qs.Widgets
@@ -189,7 +190,7 @@ PluginSettings {
             Row {
                 spacing: Theme.spacingS
 
-                DankIcon {
+                DmsCommon.DIcon {
                     name: StockService.displayMode === "percent" ? "radio_button_checked" : "radio_button_unchecked"
                     size: Theme.iconSize
                     color: StockService.displayMode === "percent" ? Theme.primary : Theme.surfaceVariantText
@@ -220,7 +221,7 @@ PluginSettings {
             Row {
                 spacing: Theme.spacingS
 
-                DankIcon {
+                DmsCommon.DIcon {
                     name: StockService.displayMode === "amount" ? "radio_button_checked" : "radio_button_unchecked"
                     size: Theme.iconSize
                     color: StockService.displayMode === "amount" ? Theme.primary : Theme.surfaceVariantText
@@ -281,7 +282,7 @@ PluginSettings {
             Row {
                 spacing: Theme.spacingS
 
-                DankIcon {
+                DmsCommon.DIcon {
                     name: StockService.nameDisplayMode === "none" ? "radio_button_checked" : "radio_button_unchecked"
                     size: Theme.iconSize
                     color: StockService.nameDisplayMode === "none" ? Theme.primary : Theme.surfaceVariantText
@@ -312,7 +313,7 @@ PluginSettings {
             Row {
                 spacing: Theme.spacingS
 
-                DankIcon {
+                DmsCommon.DIcon {
                     name: StockService.nameDisplayMode === "pinyin" ? "radio_button_checked" : "radio_button_unchecked"
                     size: Theme.iconSize
                     color: StockService.nameDisplayMode === "pinyin" ? Theme.primary : Theme.surfaceVariantText
@@ -343,7 +344,7 @@ PluginSettings {
             Row {
                 spacing: Theme.spacingS
 
-                DankIcon {
+                DmsCommon.DIcon {
                     name: StockService.nameDisplayMode === "hanzi" ? "radio_button_checked" : "radio_button_unchecked"
                     size: Theme.iconSize
                     color: StockService.nameDisplayMode === "hanzi" ? Theme.primary : Theme.surfaceVariantText
@@ -374,7 +375,7 @@ PluginSettings {
             Row {
                 spacing: Theme.spacingS
 
-                DankIcon {
+                DmsCommon.DIcon {
                     name: StockService.nameDisplayMode === "full" ? "radio_button_checked" : "radio_button_unchecked"
                     size: Theme.iconSize
                     color: StockService.nameDisplayMode === "full" ? Theme.primary : Theme.surfaceVariantText
@@ -420,43 +421,6 @@ PluginSettings {
         width: parent.width
         spacing: Theme.spacingM
 
-        // Font Scale Input
-        Row {
-            spacing: Theme.spacingM
-            height: 32
-
-            StyledText {
-                text: root.t("Font Scale:")
-                font.pixelSize: Theme.fontSizeMedium
-                color: Theme.surfaceText
-                anchors.verticalCenter: parent.verticalCenter
-            }
-
-            Rectangle {
-                width: 60; height: 32
-                color: Theme.surfaceContainer
-                radius: 4
-                border.color: Theme.surfaceVariant; border.width: 1
-
-                TextInput {
-                    anchors.fill: parent; anchors.margins: 4
-                    text: StockService.statusBarFontScale.toFixed(1)
-                    color: Theme.surfaceText
-                    font.pixelSize: Theme.fontSizeMedium
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    validator: DoubleValidator {
-                        bottom: 0.5; top: 3.0; decimals: 1
-                    }
-                    onEditingFinished: {
-                        var val = parseFloat(text);
-                        if (!isNaN(val) && val >= 0.5 && val <= 3.0) StockService.statusBarFontScale = val;
-                        else text = StockService.statusBarFontScale.toFixed(1);
-                    }
-                }
-            }
-        }
-
         // Max Stocks Input
         Row {
             spacing: Theme.spacingM
@@ -499,7 +463,7 @@ PluginSettings {
             spacing: Theme.spacingM
             height: 32
 
-            DankIcon {
+            DmsCommon.DIcon {
                 name: StockService.statusBarScrollable ? "check_box" : "check_box_outline_blank"
                 size: Theme.iconSize
                 color: StockService.statusBarScrollable ? Theme.primary : Theme.surfaceVariantText
@@ -545,7 +509,7 @@ PluginSettings {
         spacing: Theme.spacingM
         height: 32
 
-        DankIcon {
+        DmsCommon.DIcon {
             name: StockService.showSparklines ? "check_box" : "check_box_outline_blank"
             size: Theme.iconSize
             color: StockService.showSparklines ? Theme.primary : Theme.surfaceVariantText
@@ -639,7 +603,7 @@ PluginSettings {
             spacing: Theme.spacingS
             height: parent.height
 
-            DankIcon {
+            DmsCommon.DIcon {
                 name: active ? "radio_button_checked" : "radio_button_unchecked"
                 size: Theme.iconSize
                 color: active ? Theme.primary : Theme.surfaceVariantText

@@ -1,3 +1,4 @@
+import qs.DCommon.Widgets as DmsCommon
 import QtQuick
 import QtQuick.Controls 2.15
 import qs.Widgets
@@ -99,7 +100,7 @@ Rectangle {
                 width: parent.width
                 spacing: 8
 
-                DankIcon {
+                DmsCommon.DIcon {
                     name: "notifications"
                     size: 20
                     color: Theme.primary
@@ -140,7 +141,7 @@ Rectangle {
                 height: 36
                 spacing: 10
 
-                DankIcon {
+                DmsCommon.DIcon {
                     name: alertSwitch.checked ? "notifications_active" : "notifications_off"
                     size: 18
                     color: alertSwitch.checked ? Theme.primary : Theme.surfaceVariantText
@@ -210,7 +211,7 @@ Rectangle {
                         anchors.rightMargin: 10
                         spacing: 6
 
-                        DankIcon {
+                        DmsCommon.DIcon {
                             name: "trending_up"
                             size: 18
                             color: Theme.primary
