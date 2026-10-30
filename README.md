@@ -60,6 +60,13 @@ leemeng0x61@gmail.com
 
 ## Changelog
 
+### 2026-10-30 — Dux Shell 2.0 compatibility
+
+- Replace legacy `DankIcon` components with `DCommon.DIcon` in settings, dialogs, and stock list controls.
+- Pass the active bar thickness and configuration to horizontal and vertical stock widgets so text follows the bar font scale and maximize-text setting.
+- Blend gain/loss text colors with the theme's bar foreground for light and dark themes.
+- Remove the separate stock-widget font-scale setting and its persistence; use the native bar settings instead.
+
 ### v1.2.3 (2026-04-03)
 
 - ✅ **Bar Configuration Simplification**: Removed explicit barThickness and config bindings, using default Quickshell behavior for cleaner code.
